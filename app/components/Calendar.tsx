@@ -1,9 +1,19 @@
+//  TODO: Refactor Code.
+//  TODO: Work on Documentation
+//  TODO: Change Calendar Day constructor to use Date instead of numbers
+//  TODO: Build CSS classnames in each Date object
+//  TODO: Add highlight to current day (on current month only)
+//  TODO: * Add function to change Month and either a dropdown or buttons for Year
+//  Next thing to work on is highlighted by *
+
 import React, { useState } from 'react';
 import styles from './Calendar.css';
 
 export const links = () => [{ rel: 'stylesheet', href: styles }];
 
-type calendarProps = {};
+type calendarProps = {
+  targetDate?: Date;
+};
 
 type dateType = {
   key: number;
@@ -38,11 +48,11 @@ function isleapYear(year: number) {
   return (year & 3) == 0 && (year % 25 != 0 || (year & 15) == 0);
 }
 
-function getMonthName(date: Date) {
+function getMonthsName(date: Date) {
   return MonthNames[date.getMonth()];
 }
 
-function getMonthTotalDays(date: Date) {
+function getMonthsDateCount(date: Date) {
   const month = date.getMonth();
   if (month != 1) return MonthDateCount[month];
 
@@ -59,7 +69,7 @@ function getStartingPosition(date: Date) {
 
 function calendarDateBuilder(date: Date) {
   const startingPosition = getStartingPosition(date);
-  const totalDays = getMonthTotalDays(date);
+  const totalDays = getMonthsDateCount(date);
   const wrappedDaysCountUncleaned = totalDays + startingPosition - 35;
   // TODO: Clean function to avoid negative values
   const wrappedDaysCount = wrappedDaysCountUncleaned < 0 ? 0 : wrappedDaysCountUncleaned;
@@ -120,19 +130,22 @@ function calendarDateBuilder(date: Date) {
 
 //  React Function Class
 
-export const Calendar: React.FC<calendarProps> = () => {
-  // const [date, setDate] = useState(new Date());
-  const [date, setDate] = useState(new Date(2022, 6, 1));
+export const Calendar: React.FC<calendarProps> = (Props) => {
+  const [todaysDate] = useState(new Date());
+  const [activeDate, setactiveDate] = useState(todaysDate);
 
-  const monthName = getMonthName(date);
-  const yearNumber = date.getFullYear();
-  const calendarDates = calendarDateBuilder(date);
+  if (Props.targetDate != undefined && activeDate != Props.targetDate)
+    setactiveDate(Props.targetDate);
+
+  const month = getMonthsName(activeDate);
+  const year = activeDate.getFullYear();
+  const calendarDates = calendarDateBuilder(activeDate);
 
   return (
     <div className='calendar'>
       <div className='calendar__MonthYear'>
         <h3>
-          {monthName} {yearNumber}
+          {month} {year}
         </h3>
       </div>
       <div className='calendar__Days'>
