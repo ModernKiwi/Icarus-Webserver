@@ -1,10 +1,16 @@
 import type { LinksFunction } from '@remix-run/node';
-import styleSheet from './Index.css';
+import styles from '~/styles/Index.css';
+
+import { Calendar, links as calendarLinks } from '~/components/Calendar';
 
 export const links: LinksFunction = () => {
-  return [{ rel: 'stylesheet', href: styleSheet }];
+  return [...calendarLinks(), { rel: 'stylesheet', href: styles }];
 };
 
 export default function Index() {
-  return <div className='test'></div>;
+  return (
+    <div className='devIndicator'>
+      <Calendar />
+    </div>
+  );
 }
