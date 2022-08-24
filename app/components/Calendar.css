@@ -1,12 +1,15 @@
 .calendar {
   aspect-ratio: 1;
 
-  width: 600px;
+  min-width: 420px;
+  min-height: 420px;
+  width: auto;
+  height: auto;
 
   display: grid;
 
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(60px, 1fr));
+  grid-template-rows: repeat(7, minmax(60px, 1fr));
 }
 
 .calendar__MonthYear {

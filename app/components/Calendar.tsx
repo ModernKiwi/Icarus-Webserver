@@ -49,7 +49,7 @@ function isleapYear(year: number) {
 }
 
 function getMonthsName(date: Date) {
-  return MonthNames[date.getMonth()];
+  return MonthNames[date.getMonth() - 1];
 }
 
 function getMonthsDateCount(date: Date) {
@@ -142,7 +142,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
   const calendarDates = calendarDateBuilder(activeDate);
 
   return (
-    <div className='calendar'>
+    <div className='calendar devIndicator'>
       <div className='calendar__MonthYear'>
         <h3>
           {month} {year}
