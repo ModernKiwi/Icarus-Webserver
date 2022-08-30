@@ -46,12 +46,13 @@ function isleapYear(year: number) {
   return (year & 3) == 0 && (year % 25 != 0 || (year & 15) == 0);
 }
 
-function isCurrentMonthYear(date: Date) {
+function isCurrentDayMonthYear(date: Date, currentDateNumber: number) {
   const currentDate = new Date();
+  const isCurrentDay = currentDate.getDate() === currentDateNumber ? true : false;
   const isCurrentMonth = currentDate.getMonth() === date.getMonth() ? true : false;
   const isCurrentYear = currentDate.getFullYear() === date.getFullYear() ? true : false;
 
-  return isCurrentMonth && isCurrentYear;
+  return isCurrentDay && isCurrentMonth && isCurrentYear;
 }
 
 function getMonthsName(date: Date) {
@@ -66,67 +67,65 @@ function getMonthsDateCount(date: Date) {
   else return MonthDateCount[month];
 }
 
-//  Functions
 function getStartingPosition(date: Date) {
   const month = date.getMonth();
   const year = date.getFullYear();
   return new Date(year, month, 1).getDay();
 }
 
-function calendarDateBuilder(date: Date) {
+function calendarDatesBuilder(date: Date) {
   const startingPosition = getStartingPosition(date);
   const totalDays = getMonthsDateCount(date);
-  const wrappedDaysCount = Math.max(totalDays + startingPosition - 35, 0);
+  const wrappedDatesCount = Math.max(totalDays + startingPosition - 35, 0);
+  const blankDatesCount = startingPosition - wrappedDatesCount;
 
   const CalendarDateArray: Array<dateType> = [];
 
   let keyNumber = 0;
 
   //  Build Wrapped to top days if any.
-  if (wrappedDaysCount > 0)
-    for (let steps = wrappedDaysCount - 1; steps >= 0; steps--) {
-      const key = keyNumber;
-      keyNumber++;
+  if (wrappedDatesCount > 0)
+    for (let steps = wrappedDatesCount - 1; steps >= 0; steps--) {
       const dateNumber = totalDays - steps;
-      const isToday =
-        date.getDate() === dateNumber ? (isCurrentMonthYear(date) ? true : false) : false;
-      const dateObject: dateType = {
-        key: key,
-        dateNumber: dateNumber,
-        currentDay: isToday,
-      };
-      CalendarDateArray.push(dateObject);
+      const isToday = isCurrentDayMonthYear(date, dateNumber);
+      CalendarDateArray.push(makeCalendarDateObject(keyNumber++, dateNumber, isToday));
     }
 
   //  Build Spaces if calendar does not start at begining
-  if (startingPosition > 0) {
-    const blankSpaces = startingPosition - wrappedDaysCount;
-    for (let steps = 0; steps < blankSpaces; steps++) {
-      const key = keyNumber;
-      keyNumber++;
-      const dateObject: dateType = {
-        key: key,
-      };
-      CalendarDateArray.push(dateObject);
+  if (blankDatesCount > 0)
+    for (let steps = 0; steps < blankDatesCount; steps++) {
+      CalendarDateArray.push(makeCalendarDateObject(keyNumber++));
     }
-  }
 
   //  Build Spaces if calendar does not start at begining
-
-  for (let steps = 0; steps < totalDays - wrappedDaysCount; steps++) {
-    const key = keyNumber;
-    keyNumber++;
-    const isToday =
-      date.getDate() === steps + 1 ? (isCurrentMonthYear(date) ? true : false) : false;
-    const dateObject: dateType = {
-      key: key,
-      dateNumber: steps + 1,
-      currentDay: isToday,
-    };
-    CalendarDateArray.push(dateObject);
+  for (let steps = 0; steps < totalDays - wrappedDatesCount; steps++) {
+    const dateNumber = steps + 1;
+    const isToday = isCurrentDayMonthYear(date, dateNumber);
+    CalendarDateArray.push(makeCalendarDateObject(keyNumber++, steps + 1, isToday));
   }
-
   return CalendarDateArray;
+}
+
+function makeCalendarDateObject(
+  keyNumber: number,
+  dateNumber?: number,
+  currentDay?: boolean,
+  acheivementRating?: number,
+  moodRating?: number
+) {
+  const cssClassName = ['calendar__Dates__date'];
+  if (currentDay) cssClassName.push('calendar__Date__date--currentDay');
+
+  const dateObject: dateType = {
+    key: keyNumber,
+    dateNumber: dateNumber,
+    currentDay: currentDay,
+    acheivementRating: undefined,
+    moodRating: undefined,
+    ClassNames: cssClassName,
+  };
+
+  return dateObject;
 }
 
 export const Calendar: React.FC<calendarProps> = (Props) => {
@@ -134,7 +133,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
   const [currentDate, setCurrentDate] = useState(
     Props.startingDate != undefined ? Props.startingDate : todaysDate
   );
-  const [calendarDates, setCalendarDates] = useState(calendarDateBuilder(currentDate));
+  const [calendarDates, setCalendarDates] = useState(calendarDatesBuilder(currentDate));
 
   const month = getMonthsName(currentDate);
   const year = currentDate.getFullYear();
@@ -145,7 +144,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
     newDate.setMonth(newMonthValue);
 
     setCurrentDate(newDate);
-    setCalendarDates(calendarDateBuilder(newDate));
+    setCalendarDates(calendarDatesBuilder(newDate));
   }
 
   function nextMonth(date: Date) {
@@ -154,7 +153,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
     newDate.setMonth(newMonthValue);
 
     setCurrentDate(newDate);
-    setCalendarDates(calendarDateBuilder(newDate));
+    setCalendarDates(calendarDatesBuilder(newDate));
   }
 
   function previousYear(date: Date) {
@@ -163,7 +162,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
     newDate.setMonth(newMonthValue);
 
     setCurrentDate(newDate);
-    setCalendarDates(calendarDateBuilder(newDate));
+    setCalendarDates(calendarDatesBuilder(newDate));
   }
 
   function nextYear(date: Date) {
@@ -172,7 +171,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
     newDate.setMonth(newMonthValue);
 
     setCurrentDate(newDate);
-    setCalendarDates(calendarDateBuilder(newDate));
+    setCalendarDates(calendarDatesBuilder(newDate));
   }
 
   return (
@@ -193,7 +192,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
       </div>
       <div className='calendar__Dates'>
         {calendarDates.map((date) => (
-          <div key={date.key} className='calendar__Dates__date'>
+          <div key={date.key} className={date.ClassNames?.join(' ')}>
             {date.dateNumber}
           </div>
         ))}
