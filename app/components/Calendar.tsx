@@ -12,7 +12,7 @@ import styles from './Calendar.css';
 export const links = () => [{ rel: 'stylesheet', href: styles }];
 
 type calendarProps = {
-  targetDate?: Date;
+  startingDate?: Date;
 };
 
 type dateType = {
@@ -49,7 +49,7 @@ function isleapYear(year: number) {
 }
 
 function getMonthsName(date: Date) {
-  return MonthNames[date.getMonth() - 1];
+  return MonthNames[date.getMonth()];
 }
 
 function getMonthsDateCount(date: Date) {
@@ -70,13 +70,9 @@ function getStartingPosition(date: Date) {
 function calendarDateBuilder(date: Date) {
   const startingPosition = getStartingPosition(date);
   const totalDays = getMonthsDateCount(date);
-  const wrappedDaysCountUncleaned = totalDays + startingPosition - 35;
-  // TODO: Clean function to avoid negative values
-  const wrappedDaysCount = wrappedDaysCountUncleaned < 0 ? 0 : wrappedDaysCountUncleaned;
+  const wrappedDaysCount = Math.max(totalDays + startingPosition - 35, 0);
 
-  const wrappedDates: Array<dateType> = [];
-  const blankDates: Array<dateType> = [];
-  const nonwrappedDates: Array<dateType> = [];
+  const CalendarDateArray: Array<dateType> = [];
 
   let keyNumber = 0;
 
@@ -92,7 +88,7 @@ function calendarDateBuilder(date: Date) {
         dateNumber: dateNumber,
         currentDay: isToday,
       };
-      wrappedDates.push(dateObject);
+      CalendarDateArray.push(dateObject);
     }
 
   //  Build Spaces if calendar does not start at begining
@@ -104,7 +100,7 @@ function calendarDateBuilder(date: Date) {
       const dateObject: dateType = {
         key: key,
       };
-      blankDates.push(dateObject);
+      CalendarDateArray.push(dateObject);
     }
   }
 
@@ -119,34 +115,78 @@ function calendarDateBuilder(date: Date) {
       dateNumber: steps + 1,
       currentDay: isToday,
     };
-    nonwrappedDates.push(dateObject);
+    CalendarDateArray.push(dateObject);
   }
 
-  // Combine the 3 arrays in order
-  const calendarDates = wrappedDates.concat(blankDates, nonwrappedDates);
-
-  return calendarDates;
+  return CalendarDateArray;
 }
 
-//  React Function Class
-
 export const Calendar: React.FC<calendarProps> = (Props) => {
+  //  Note: possible bug introduction below
   const [todaysDate] = useState(new Date());
-  const [activeDate, setactiveDate] = useState(todaysDate);
+  const [currentDate, setCurrentDate] = useState(todaysDate);
+  const [calendarDates, setCalendarDates] = useState(calendarDateBuilder(currentDate));
 
-  if (Props.targetDate != undefined && activeDate != Props.targetDate)
-    setactiveDate(Props.targetDate);
+  //  Note: This may break operation of changing months/years
+  if (Props.startingDate != undefined && currentDate == todaysDate) {
+    setCurrentDate(Props.startingDate);
+    setCalendarDates(calendarDateBuilder(currentDate));
+  }
 
-  const month = getMonthsName(activeDate);
-  const year = activeDate.getFullYear();
-  const calendarDates = calendarDateBuilder(activeDate);
+  const month = getMonthsName(currentDate);
+  const year = currentDate.getFullYear();
+  // let calendarDates = calendarDateBuilder(currentDate);
+
+  function previousMonth(date: Date) {
+    const newMonthValue = date.getMonth() - 1;
+    let newDate = date;
+    newDate.setMonth(newMonthValue);
+
+    setCurrentDate(newDate);
+    setCalendarDates(calendarDateBuilder(newDate));
+  }
+
+  function nextMonth(date: Date) {
+    const newMonthValue = date.getMonth() + 1;
+    let newDate = date;
+    newDate.setMonth(newMonthValue);
+
+    console.log(newDate);
+
+    setCurrentDate(newDate);
+    setCalendarDates(calendarDateBuilder(newDate));
+  }
+
+  function previousYear(date: Date) {
+    const newMonthValue = date.getMonth() - 12;
+    let newDate = date;
+    newDate.setMonth(newMonthValue);
+
+    setCurrentDate(newDate);
+    setCalendarDates(calendarDateBuilder(newDate));
+  }
+
+  function nextYear(date: Date) {
+    const newMonthValue = date.getMonth() + 12;
+    let newDate = date;
+    newDate.setMonth(newMonthValue);
+
+    console.log(newDate);
+
+    setCurrentDate(newDate);
+    setCalendarDates(calendarDateBuilder(newDate));
+  }
 
   return (
     <div className='calendar devIndicator'>
       <div className='calendar__MonthYear'>
+        <button onClick={() => previousYear(currentDate)}>{`<<`}</button>
+        <button onClick={() => previousMonth(currentDate)}>{`<`}</button>
         <h3>
           {month} {year}
         </h3>
+        <button onClick={() => nextMonth(currentDate)}>{`>`}</button>
+        <button onClick={() => nextYear(currentDate)}>{`>>`}</button>
       </div>
       <div className='calendar__Days'>
         {DayNames.map((DayName) => (
