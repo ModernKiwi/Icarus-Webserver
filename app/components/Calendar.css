@@ -1,10 +1,14 @@
 .calendar {
   aspect-ratio: 1;
 
-  min-width: 420px;
-  min-height: 420px;
+  font-size: 1rem;
+
+  min-width: min-content;
+  min-height: min-content;
   width: auto;
   height: auto;
+
+  background-color: dimgray;
 
   display: grid;
 
@@ -13,9 +17,11 @@
 }
 
 .calendar__MonthYear {
-  display: grid;
+  font-size: 1.5em;
 
   padding: 0 10px;
+
+  display: grid;
 
   grid-column: 1/-1;
   grid-row: 1/2;
@@ -32,10 +38,13 @@
     repeat(2, minmax(60px, 1fr));
 }
 
-.calendar__MonthYear__MonthSelector {
+.calendar__MonthYear > h3 {
+  margin-block: 0;
 }
 
 .calendar__Days {
+  font-size: 1em;
+
   display: grid;
 
   grid-column: 1/-1;
@@ -47,8 +56,17 @@
   justify-items: center;
   align-items: center;
 }
+.calendar__Days > h4 {
+  margin-block: 0;
+}
 
 .calendar__Dates {
+  font-size: 0.8em;
+
+  padding: 10px;
+
+  border-radius: 0.5em;
+
   display: grid;
 
   grid-column: 1/-1;
@@ -57,22 +75,44 @@
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(5, 1fr);
 
+  justify-items: stretch;
+  align-items: stretch;
+
+  column-gap: 5px;
+  row-gap: 5px;
+
+  /* border: 1px dashed green; */
+}
+
+.calendar__Dates__datecontainer {
+  aspect-ratio: 1;
+
+  color: aliceblue;
+
+  min-width: 20px;
+  min-height: 20px;
+
+  border-radius: 5%;
+
+  /* padding: 5%; */
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+
   justify-items: center;
   align-items: center;
 
-  border: 1px dashed green;
+  background-color: gray;
 }
 
-.calendar__Dates__date {
-  padding: 5px;
-}
-
-.calendar__Date__date--currentDay {
+.calendar__Date__datecontainer--current {
   background-color: cadetblue;
 }
 
-.calendar__Date__date--targetDay {
-  border-radius: 1px;
+.calendar__Date__datecontainer--target {
   border-style: dotted;
   border-color: coral;
+  border-width: 1px;
 }

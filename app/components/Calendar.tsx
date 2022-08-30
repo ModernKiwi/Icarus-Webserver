@@ -1,8 +1,6 @@
-//  TODO: Refactor Code.
-//  TODO: Work on Documentation
-//  TODO: Change Calendar Day constructor to use Date instead of numbers
-//  TODO: Build CSS classnames in each Date object
-//  Next thing to work on is highlighted by *
+//  TODO: Clean up Code.
+//  TODO: Documentation.
+//  TODO: CSS degisn.
 
 import React, { useState } from 'react';
 import styles from './Calendar.css';
@@ -133,9 +131,9 @@ function makeCalendarDateObj(
   acheivementRating?: number,
   moodRating?: number
 ) {
-  const cssClassName = ['calendar__Dates__date'];
-  if (isCurrentDate) cssClassName.push('calendar__Date__date--currentDay');
-  if (isTargetDate) cssClassName.push('calendar__Date__date--targetDay');
+  const cssClassName = ['calendar__Dates__datecontainer'];
+  if (isCurrentDate) cssClassName.push('calendar__Date__datecontainer--current');
+  if (isTargetDate) cssClassName.push('calendar__Date__datecontainer--target');
 
   const dateObject: dateType = {
     key: keyNumber,
@@ -210,7 +208,10 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
       <div className='calendar__Dates'>
         {calendarDates.map((date) => (
           <div key={date.key} className={date.ClassNames?.join(' ')}>
-            {date.date?.getDate()}
+            <div>{date.date?.getDate()}</div>
+            <div></div>
+            <div>🏆</div>
+            <div>😐</div>
           </div>
         ))}
       </div>
