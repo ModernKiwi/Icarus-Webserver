@@ -2,8 +2,6 @@
 //  TODO: Work on Documentation
 //  TODO: Change Calendar Day constructor to use Date instead of numbers
 //  TODO: Build CSS classnames in each Date object
-//  TODO: Add highlight to current day (on current month only)
-//  TODO: Stop current day from working on not current month. *
 //  Next thing to work on is highlighted by *
 
 import React, { useState } from 'react';
@@ -132,20 +130,14 @@ function calendarDateBuilder(date: Date) {
 }
 
 export const Calendar: React.FC<calendarProps> = (Props) => {
-  //  Note: possible bug introduction below
   const [todaysDate] = useState(new Date());
-  const [currentDate, setCurrentDate] = useState(todaysDate);
+  const [currentDate, setCurrentDate] = useState(
+    Props.startingDate != undefined ? Props.startingDate : todaysDate
+  );
   const [calendarDates, setCalendarDates] = useState(calendarDateBuilder(currentDate));
-
-  //  Note: This may break operation of changing months/years
-  if (Props.startingDate != undefined && currentDate == todaysDate) {
-    setCurrentDate(Props.startingDate);
-    setCalendarDates(calendarDateBuilder(currentDate));
-  }
 
   const month = getMonthsName(currentDate);
   const year = currentDate.getFullYear();
-  // let calendarDates = calendarDateBuilder(currentDate);
 
   function previousMonth(date: Date) {
     const newMonthValue = date.getMonth() - 1;
