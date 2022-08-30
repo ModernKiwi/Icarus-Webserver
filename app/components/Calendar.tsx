@@ -3,7 +3,7 @@
 //  TODO: Change Calendar Day constructor to use Date instead of numbers
 //  TODO: Build CSS classnames in each Date object
 //  TODO: Add highlight to current day (on current month only)
-//  TODO: * Add function to change Month and either a dropdown or buttons for Year
+//  TODO: Stop current day from working on not current month. *
 //  Next thing to work on is highlighted by *
 
 import React, { useState } from 'react';
@@ -48,6 +48,14 @@ function isleapYear(year: number) {
   return (year & 3) == 0 && (year % 25 != 0 || (year & 15) == 0);
 }
 
+function isCurrentMonthYear(date: Date) {
+  const currentDate = new Date();
+  const isCurrentMonth = currentDate.getMonth() === date.getMonth() ? true : false;
+  const isCurrentYear = currentDate.getFullYear() === date.getFullYear() ? true : false;
+
+  return isCurrentMonth && isCurrentYear;
+}
+
 function getMonthsName(date: Date) {
   return MonthNames[date.getMonth()];
 }
@@ -82,7 +90,8 @@ function calendarDateBuilder(date: Date) {
       const key = keyNumber;
       keyNumber++;
       const dateNumber = totalDays - steps;
-      const isToday = date.getDate() === dateNumber ? true : false;
+      const isToday =
+        date.getDate() === dateNumber ? (isCurrentMonthYear(date) ? true : false) : false;
       const dateObject: dateType = {
         key: key,
         dateNumber: dateNumber,
@@ -109,7 +118,8 @@ function calendarDateBuilder(date: Date) {
   for (let steps = 0; steps < totalDays - wrappedDaysCount; steps++) {
     const key = keyNumber;
     keyNumber++;
-    const isToday = date.getDate() === steps + 1 ? true : false;
+    const isToday =
+      date.getDate() === steps + 1 ? (isCurrentMonthYear(date) ? true : false) : false;
     const dateObject: dateType = {
       key: key,
       dateNumber: steps + 1,
