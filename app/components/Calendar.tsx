@@ -97,12 +97,13 @@ function calendarDatesBuilder(date: Date) {
       CalendarDateArray.push(makeCalendarDateObject(keyNumber++));
     }
 
-  //  Build Spaces if calendar does not start at begining
+  //  Add in the rest of the normal days to the calendar
   for (let steps = 0; steps < totalDays - wrappedDatesCount; steps++) {
     const dateNumber = steps + 1;
     const isToday = isCurrentDayMonthYear(date, dateNumber);
     CalendarDateArray.push(makeCalendarDateObject(keyNumber++, steps + 1, isToday));
   }
+
   return CalendarDateArray;
 }
 
