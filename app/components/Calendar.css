@@ -70,3 +70,9 @@
 .calendar__Date__date--currentDay {
   background-color: cadetblue;
 }
+
+.calendar__Date__date--targetDay {
+  border-radius: 1px;
+  border-style: dotted;
+  border-color: coral;
+}

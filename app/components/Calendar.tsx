@@ -10,16 +10,15 @@ import styles from './Calendar.css';
 export const links = () => [{ rel: 'stylesheet', href: styles }];
 
 type calendarProps = {
-  startingDate?: Date;
+  targetDate?: Date;
 };
 
 type dateType = {
   key: number;
-  dateNumber?: number;
-  currentDay?: boolean;
+  date?: Date;
+  ClassNames: Array<string>;
   acheivementRating?: number; //  Needs implimentation with database
   moodRating?: number; //  Needs implimentation with database
-  ClassNames?: Array<string>;
 };
 
 //  Variables
@@ -46,11 +45,20 @@ function isleapYear(year: number) {
   return (year & 3) == 0 && (year % 25 != 0 || (year & 15) == 0);
 }
 
-function isCurrentDayMonthYear(date: Date, currentDateNumber: number) {
-  const currentDate = new Date();
-  const isCurrentDay = currentDate.getDate() === currentDateNumber ? true : false;
-  const isCurrentMonth = currentDate.getMonth() === date.getMonth() ? true : false;
-  const isCurrentYear = currentDate.getFullYear() === date.getFullYear() ? true : false;
+function isTodaysDate(currentDate: Date, todaysDate: Date) {
+  const isCurrentDay = currentDate.getDate() === todaysDate.getDate() ? true : false;
+  const isCurrentMonth = currentDate.getMonth() === todaysDate.getMonth() ? true : false;
+  const isCurrentYear = currentDate.getFullYear() === todaysDate.getFullYear() ? true : false;
+
+  return isCurrentDay && isCurrentMonth && isCurrentYear;
+}
+
+function isTargetDay(currentDate: Date, targetDate?: Date) {
+  if (targetDate == undefined) return false;
+
+  const isCurrentDay = currentDate.getDate() === targetDate.getDate() ? true : false;
+  const isCurrentMonth = currentDate.getMonth() === targetDate.getMonth() ? true : false;
+  const isCurrentYear = currentDate.getFullYear() === targetDate.getFullYear() ? true : false;
 
   return isCurrentDay && isCurrentMonth && isCurrentYear;
 }
@@ -73,11 +81,13 @@ function getStartingPosition(date: Date) {
   return new Date(year, month, 1).getDay();
 }
 
-function calendarDatesBuilder(date: Date) {
-  const startingPosition = getStartingPosition(date);
-  const totalDays = getMonthsDateCount(date);
+function makecalendarDatesObj(selectedMonthYear: Date, todaysDate: Date, targetDate?: Date) {
+  const startingPosition = getStartingPosition(selectedMonthYear);
+  const totalDays = getMonthsDateCount(selectedMonthYear);
   const wrappedDatesCount = Math.max(totalDays + startingPosition - 35, 0);
   const blankDatesCount = startingPosition - wrappedDatesCount;
+  const month = selectedMonthYear.getMonth();
+  const year = selectedMonthYear.getFullYear();
 
   const CalendarDateArray: Array<dateType> = [];
 
@@ -87,43 +97,52 @@ function calendarDatesBuilder(date: Date) {
   if (wrappedDatesCount > 0)
     for (let steps = wrappedDatesCount - 1; steps >= 0; steps--) {
       const dateNumber = totalDays - steps;
-      const isToday = isCurrentDayMonthYear(date, dateNumber);
-      CalendarDateArray.push(makeCalendarDateObject(keyNumber++, dateNumber, isToday));
+      const objectDate = new Date(year, month, dateNumber);
+      const isToday = isTodaysDate(objectDate, todaysDate);
+      const isTarget = isTargetDay(objectDate, targetDate);
+      CalendarDateArray.push(
+        makeCalendarDateObj(keyNumber++, objectDate, isToday, isTarget, undefined, undefined)
+      );
     }
 
   //  Build Spaces if calendar does not start at begining
   if (blankDatesCount > 0)
     for (let steps = 0; steps < blankDatesCount; steps++) {
-      CalendarDateArray.push(makeCalendarDateObject(keyNumber++));
+      CalendarDateArray.push(makeCalendarDateObj(keyNumber++));
     }
 
   //  Add in the rest of the normal days to the calendar
   for (let steps = 0; steps < totalDays - wrappedDatesCount; steps++) {
     const dateNumber = steps + 1;
-    const isToday = isCurrentDayMonthYear(date, dateNumber);
-    CalendarDateArray.push(makeCalendarDateObject(keyNumber++, steps + 1, isToday));
+    const objectDate = new Date(year, month, dateNumber);
+    const isToday = isTodaysDate(objectDate, todaysDate);
+    const isTarget = isTargetDay(objectDate, targetDate);
+    CalendarDateArray.push(
+      makeCalendarDateObj(keyNumber++, objectDate, isToday, isTarget, undefined, undefined)
+    );
   }
 
   return CalendarDateArray;
 }
 
-function makeCalendarDateObject(
+function makeCalendarDateObj(
   keyNumber: number,
-  dateNumber?: number,
-  currentDay?: boolean,
+  objectDate?: Date,
+  isCurrentDate?: boolean,
+  isTargetDate?: boolean,
   acheivementRating?: number,
   moodRating?: number
 ) {
   const cssClassName = ['calendar__Dates__date'];
-  if (currentDay) cssClassName.push('calendar__Date__date--currentDay');
+  if (isCurrentDate) cssClassName.push('calendar__Date__date--currentDay');
+  if (isTargetDate) cssClassName.push('calendar__Date__date--targetDay');
 
   const dateObject: dateType = {
     key: keyNumber,
-    dateNumber: dateNumber,
-    currentDay: currentDay,
+    date: objectDate,
+    ClassNames: cssClassName,
     acheivementRating: undefined,
     moodRating: undefined,
-    ClassNames: cssClassName,
   };
 
   return dateObject;
@@ -131,60 +150,57 @@ function makeCalendarDateObject(
 
 export const Calendar: React.FC<calendarProps> = (Props) => {
   const [todaysDate] = useState(new Date());
-  const [currentDate, setCurrentDate] = useState(
-    Props.startingDate != undefined ? Props.startingDate : todaysDate
+  const [selectedMonthYear, setselectedMonthYear] = useState(
+    Props.targetDate != undefined
+      ? new Date(Props.targetDate.getFullYear(), Props.targetDate.getMonth())
+      : new Date(todaysDate.getFullYear(), todaysDate.getMonth())
   );
-  const [calendarDates, setCalendarDates] = useState(calendarDatesBuilder(currentDate));
+  const [calendarDates, setCalendarDates] = useState(
+    makecalendarDatesObj(selectedMonthYear, todaysDate, Props.targetDate)
+  );
 
-  const month = getMonthsName(currentDate);
-  const year = currentDate.getFullYear();
+  const monthName = getMonthsName(selectedMonthYear);
+  const monthValue = selectedMonthYear.getMonth();
+  const year = selectedMonthYear.getFullYear();
 
-  function previousMonth(date: Date) {
-    const newMonthValue = date.getMonth() - 1;
-    let newDate = date;
-    newDate.setMonth(newMonthValue);
-
-    setCurrentDate(newDate);
-    setCalendarDates(calendarDatesBuilder(newDate));
+  function previousMonth() {
+    let newSelectedMonthYear = selectedMonthYear;
+    newSelectedMonthYear.setMonth(monthValue - 1);
+    setselectedMonthYear(newSelectedMonthYear);
+    setCalendarDates(makecalendarDatesObj(newSelectedMonthYear, todaysDate, Props.targetDate));
   }
 
-  function nextMonth(date: Date) {
-    const newMonthValue = date.getMonth() + 1;
-    let newDate = date;
-    newDate.setMonth(newMonthValue);
-
-    setCurrentDate(newDate);
-    setCalendarDates(calendarDatesBuilder(newDate));
+  function nextMonth() {
+    let newSelectedMonthYear = selectedMonthYear;
+    newSelectedMonthYear.setMonth(monthValue + 1);
+    setselectedMonthYear(newSelectedMonthYear);
+    setCalendarDates(makecalendarDatesObj(newSelectedMonthYear, todaysDate, Props.targetDate));
   }
 
-  function previousYear(date: Date) {
-    const newMonthValue = date.getMonth() - 12;
-    let newDate = date;
-    newDate.setMonth(newMonthValue);
-
-    setCurrentDate(newDate);
-    setCalendarDates(calendarDatesBuilder(newDate));
+  function previousYear() {
+    let newSelectedMonthYear = selectedMonthYear;
+    newSelectedMonthYear.setMonth(monthValue - 12);
+    setselectedMonthYear(newSelectedMonthYear);
+    setCalendarDates(makecalendarDatesObj(newSelectedMonthYear, todaysDate, Props.targetDate));
   }
 
-  function nextYear(date: Date) {
-    const newMonthValue = date.getMonth() + 12;
-    let newDate = date;
-    newDate.setMonth(newMonthValue);
-
-    setCurrentDate(newDate);
-    setCalendarDates(calendarDatesBuilder(newDate));
+  function nextYear() {
+    let newSelectedMonthYear = selectedMonthYear;
+    newSelectedMonthYear.setMonth(monthValue + 12);
+    setselectedMonthYear(newSelectedMonthYear);
+    setCalendarDates(makecalendarDatesObj(newSelectedMonthYear, todaysDate, Props.targetDate));
   }
 
   return (
     <div className='calendar devIndicator'>
       <div className='calendar__MonthYear'>
-        <button onClick={() => previousYear(currentDate)}>{`<<`}</button>
-        <button onClick={() => previousMonth(currentDate)}>{`<`}</button>
+        <button onClick={() => previousYear()}>{`<<`}</button>
+        <button onClick={() => previousMonth()}>{`<`}</button>
         <h3>
-          {month} {year}
+          {monthName} {year}
         </h3>
-        <button onClick={() => nextMonth(currentDate)}>{`>`}</button>
-        <button onClick={() => nextYear(currentDate)}>{`>>`}</button>
+        <button onClick={() => nextMonth()}>{`>`}</button>
+        <button onClick={() => nextYear()}>{`>>`}</button>
       </div>
       <div className='calendar__Days'>
         {DayNames.map((DayName) => (
@@ -194,7 +210,7 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
       <div className='calendar__Dates'>
         {calendarDates.map((date) => (
           <div key={date.key} className={date.ClassNames?.join(' ')}>
-            {date.dateNumber}
+            {date.date?.getDate()}
           </div>
         ))}
       </div>
