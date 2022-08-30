@@ -151,8 +151,6 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
     let newDate = date;
     newDate.setMonth(newMonthValue);
 
-    console.log(newDate);
-
     setCurrentDate(newDate);
     setCalendarDates(calendarDateBuilder(newDate));
   }
@@ -170,8 +168,6 @@ export const Calendar: React.FC<calendarProps> = (Props) => {
     const newMonthValue = date.getMonth() + 12;
     let newDate = date;
     newDate.setMonth(newMonthValue);
-
-    console.log(newDate);
 
     setCurrentDate(newDate);
     setCalendarDates(calendarDateBuilder(newDate));

@@ -26,7 +26,10 @@
 
   grid-auto-flow: column;
 
-  grid-template-columns: repeat(2, minmax(60px, 1fr)) 3fr repeat(2, minmax(60px, 1fr));
+  grid-template-columns:
+    repeat(2, minmax(60px, 1fr))
+    3fr
+    repeat(2, minmax(60px, 1fr));
 }
 
 .calendar__MonthYear__MonthSelector {
