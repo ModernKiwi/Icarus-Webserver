@@ -1,0 +1,7 @@
+Redo Auth pages due to fucking up Git
+Redo Home Page due to fucking up Git
+Redo Navbar due to fucking up git
+Navbar component
+Database setup
+Session storage
+Basic site layout
