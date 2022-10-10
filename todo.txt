@@ -1,18 +1,12 @@
 Todo task ordered list:
 
-1: Create base site layout.
-2: Create base nav layout.
-3: Create Navlinks.
-4: Create Auth page layout.
+1:  Update Login Page, Add Auth code.
+2:  Update Logout Page, Add session code.
+3:  Create Auth page layout.
+4:  Create base nav layout.
+5:  Create Navlinks.
 
 
-
-Redo Auth pages due to fucking up Git
-Redo Home Page due to fucking up Git
-Redo Navbar due to fucking up git
 Navbar component
-Database setup
-Session storage
-Basic site layout
 
 DONT accidently Drop a stash instead of popping a stash big sad. very big sad.
