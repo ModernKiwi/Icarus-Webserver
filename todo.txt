@@ -5,3 +5,5 @@ Navbar component
 Database setup
 Session storage
 Basic site layout
+
+DONT accidently Drop a stash instead of popping a stash big sad. very big sad.
