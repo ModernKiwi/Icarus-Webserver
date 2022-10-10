@@ -1,3 +1,19 @@
+:root {
+  --bg-colour-main: rgb(15 25 45);
+  --bg-colour-sec: rgb(5 10 20);
+  /* --bg-colour-main: rgb(15 25 85);
+  --bg-colour-sec: rgb(15 25 45); */
+
+  --font-colour-main: rgb(230 245 245);
+  --font-colour-main-lighter: rgb(240 255 255);
+
+  --link-colour-main: rgb(200 210 210);
+  --link-colour-active: rgb(240 255 255);
+}
+
+* {
+  box-sizing: border-box;
+}
 html {
   font-size: 16px;
   fontfamily: 'system-ui, sans-serif';
@@ -15,20 +31,69 @@ html body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  color: var(--font-colour-main);
 }
 
-* {
-  box-sizing: border-box;
+a {
+  color: var(--link-colour-main);
 }
 
 #siteContainer {
   height: 100%;
   width: 100%;
 
-  display: flex;
+  display: grid;
+  align-items: stretch;
+  align-content: stretch;
+  justify-items: stretch;
+  justify-content: stretch;
+  grid:
+    [row1-start] 'header' 64px [row1-end]
+    [row2-start] 'body' auto [row2-end]
+    / 100%;
+}
 
+#siteHeader {
+  grid-area: header;
+
+  height: 100%;
+  width: 100%;
+
+  color: var(--font-colour-main);
+  background-color: var(--bg-colour-sec);
+
+  padding-inline: 24px;
+  padding-block: 12px;
+
+  display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+}
+
+#siteHeader > img {
+  height: 100%;
+}
+
+#siteHeader__logo {
+  height: 100%;
+}
+
+#siteBody {
+  height: 100%;
+  width: 100%;
+
+  background-color: var(--bg-colour-main);
+
+  grid-area: body;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#siteSidebar {
+  max-width: 260px;
+  grid-area: sidebar;
 }
