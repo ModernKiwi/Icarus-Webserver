@@ -1,6 +1,15 @@
 import type { LinksFunction, MetaFunction } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-import styles from '~/styles/root.css';
+import {
+  Links,
+  LiveReload,
+  Meta,
+  NavLink,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from '@remix-run/react';
+import rootStyles from '~/styles/root.css';
+import navlinkStyles from '~/styles/navlinks.css';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -9,8 +18,25 @@ export const meta: MetaFunction = () => ({
 });
 
 export const links: LinksFunction = () => {
-  return [{ rel: 'stylesheet', href: styles }];
+  return [
+    { rel: 'stylesheet', href: rootStyles },
+    { rel: 'stylesheet', href: navlinkStyles },
+  ];
 };
+
+interface ILink {
+  url: string;
+  text: string;
+  end: boolean;
+}
+
+const navURLs: ILink[] = [
+  { url: '/', text: 'Home', end: true },
+  { url: '/calendar', text: 'Calendar', end: false },
+  { url: '/login', text: 'login', end: false },
+  { url: '/register', text: 'Register', end: false },
+  { url: '/logout', text: 'Logout', end: false },
+];
 
 export default function App() {
   return (
@@ -21,7 +47,26 @@ export default function App() {
       </head>
       <body>
         <div id='siteContainer'>
-          <Outlet />
+          <div id='siteHeader'>
+            <img src='./weblogo.svg' alt='ModernKiwi Logo' />
+            <div>
+              <nav>
+                {navURLs.map((link, index) => (
+                  <NavLink
+                    key={index}
+                    to={link.url}
+                    className={({ isActive }) => (isActive ? 'navLink navLinkCurrent' : 'navLink')}
+                    end
+                  >
+                    {link.text}
+                  </NavLink>
+                ))}
+              </nav>
+            </div>
+          </div>
+          <div id='siteBody'>
+            <Outlet />
+          </div>
         </div>
         <ScrollRestoration />
         <Scripts />
