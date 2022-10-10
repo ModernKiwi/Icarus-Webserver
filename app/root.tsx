@@ -10,6 +10,7 @@ import {
 } from '@remix-run/react';
 import rootStyles from '~/styles/root.css';
 import navlinkStyles from '~/styles/navlinks.css';
+import indexStyles from '~/styles/index.css';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -21,6 +22,7 @@ export const links: LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: rootStyles },
     { rel: 'stylesheet', href: navlinkStyles },
+    { rel: 'stylesheet', href: indexStyles },
   ];
 };
 
