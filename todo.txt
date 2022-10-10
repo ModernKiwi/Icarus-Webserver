@@ -1,3 +1,12 @@
+Todo task ordered list:
+
+1: Create base site layout.
+2: Create base nav layout.
+3: Create Navlinks.
+4: Create Auth page layout.
+
+
+
 Redo Auth pages due to fucking up Git
 Redo Home Page due to fucking up Git
 Redo Navbar due to fucking up git
