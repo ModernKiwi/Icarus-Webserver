@@ -1,0 +1,74 @@
+#authBody {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#authForm {
+  margin: 0 auto 0 auto;
+  padding: 25px 15px 25px 15px;
+}
+
+#authForm > div > div > input {
+  padding: 8px 15px;
+}
+
+#formInputBlock {
+  padding: 0.5em 0.25em;
+}
+
+.inputBlock {
+  padding-inline: 1px;
+}
+
+.topForm {
+  appearance: none;
+
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  outline: 1px solid transparent;
+}
+.topForm:focus {
+  border-color: darkviolet;
+  z-index: 10;
+}
+
+.midForm {
+  appearance: none;
+
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+
+  border-radius: 0;
+
+  outline: 1px solid transparent;
+}
+.midForm:focus {
+  border-color: darkviolet;
+}
+
+.botForm {
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+
+  outline: 1px solid transparent;
+}
+.botForm:focus {
+  border-color: darkviolet;
+}
