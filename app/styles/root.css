@@ -1,14 +1,11 @@
 :root {
-  --bg-colour-main: rgb(15 25 45);
-  --bg-colour-sec: rgb(5 10 20);
-  /* --bg-colour-main: rgb(15 25 85);
-  --bg-colour-sec: rgb(15 25 45); */
+  --colour-highlight: #bbcef1;
 
-  --font-colour-main: rgb(230 245 245);
-  --font-colour-main-lighter: rgb(240 255 255);
+  --colour-background: #0f192d;
+  --colour-background-secondary: #101f3b;
 
-  --link-colour-main: rgb(200 210 210);
-  --link-colour-active: rgb(240 255 255);
+  --colour-font: #b6c3db;
+  --colour-font-secondary: #96a2b8;
 }
 
 * {
@@ -32,11 +29,11 @@ html body {
   padding: 0;
   box-sizing: border-box;
 
-  color: var(--font-colour-main);
+  color: var(--colour-font);
 }
 
 a {
-  color: var(--link-colour-main);
+  color: var(--colour-highlight);
 }
 
 #siteContainer {
@@ -60,8 +57,10 @@ a {
   height: 100%;
   width: 100%;
 
-  color: var(--font-colour-main);
-  background-color: var(--bg-colour-sec);
+  color: var(--colour-font);
+  background-color: var(--colour-background-secondary);
+
+  border-bottom: 1px solid var(--colour-highlight);
 
   padding-inline: 24px;
   padding-block: 12px;
@@ -85,17 +84,25 @@ a {
   height: 100%;
   width: 100%;
 
-  background-color: var(--bg-colour-main);
+  background-color: var(--colour-background);
 
   grid-area: body;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 #siteSidebar {
   max-width: 260px;
-  grid-area: sidebar;
+  width: 260px;
+  height: 100%;
+
+  background-color: var(--colour-background-secondary);
+}
+
+#siteBodyContainer {
+  flex-grow: 1;
+  padding: 10px 15px;
 }
 
 .sr-only {

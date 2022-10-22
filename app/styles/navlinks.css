@@ -10,9 +10,9 @@ font-medium`; */
 .navLink {
   padding-block: 1px;
   padding-inline: 3px;
-  color: var(--link-colour-main);
+  color: var(--colour-font-secondary);
 }
 
 .navLinkCurrent {
-  color: var(--link-colour-active);
+  color: var(--colour-font-highlight);
 }
