@@ -1,11 +1,15 @@
 :root {
   --colour-highlight: #bbcef1;
 
+  --colour-border: #028d3e;
+  --colour-border__highlighted: #22fc80;
+
   --colour-background: #0f192d;
   --colour-background-secondary: #101f3b;
 
   --colour-font: #b6c3db;
   --colour-font-secondary: #96a2b8;
+  --colour-font-dark: #0f192d;
 }
 
 * {

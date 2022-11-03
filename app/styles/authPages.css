@@ -26,8 +26,8 @@
 .topForm {
   appearance: none;
 
-  border-color: black;
-  border-width: 2px;
+  border-color: var(--colour-border);
+  border-width: 1px;
   border-style: solid;
 
   border-top-left-radius: 6px;
@@ -36,30 +36,34 @@
   border-bottom-right-radius: 0px;
 
   outline: 1px solid transparent;
+
+  color: var(--colour-font-dark);
 }
 .topForm:focus {
-  border-color: darkviolet;
+  border-color: var(--colour-border__highlighted);
   z-index: 10;
 }
 
 .midForm {
   appearance: none;
 
-  border-color: black;
-  border-width: 2px;
+  border-color: var(--colour-border);
+  border-width: 1px;
   border-style: solid;
 
   border-radius: 0;
 
   outline: 1px solid transparent;
+
+  color: var(--colour-font-dark);
 }
 .midForm:focus {
-  border-color: darkviolet;
+  border-color: var(--colour-border__highlighted);
 }
 
 .botForm {
-  border-color: black;
-  border-width: 2px;
+  border-color: var(--colour-border);
+  border-width: 1px;
   border-style: solid;
 
   border-top-left-radius: 0px;
@@ -68,7 +72,9 @@
   border-bottom-right-radius: 6px;
 
   outline: 1px solid transparent;
+
+  color: var(--colour-font-dark);
 }
 .botForm:focus {
-  border-color: darkviolet;
+  border-color: var(--colour-border__highlighted);
 }
