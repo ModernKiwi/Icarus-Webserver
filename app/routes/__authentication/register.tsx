@@ -6,6 +6,12 @@ import { checkEmailExists, checkUsernameExists, createUser } from '~/database/us
 import { createUserSession, getUsername } from '~/sessions/userSession.server';
 import { safeRedirect } from '~/utils';
 
+import { TextInput, cssLinks } from '~/components/inputs/TextInput';
+
+export const links: LinksFunction = () => {
+  return [...cssLinks()];
+};
+
 interface IFormErrors {
   username?: string;
   email?: string;
@@ -64,65 +70,36 @@ export default function RegisterPage() {
         <h2>Register an account</h2>
       </div>
       <div className='' id='formInputBlock'>
-        <div className='inputBlock'>
-          <label htmlFor='username' className='sr-only'>
-            Username
-          </label>
-          <input
-            id='username'
-            required
-            autoFocus={true}
-            name='username'
-            type='text'
-            aria-describedby='username-error'
-            placeholder='Uername'
-            className='topForm'
-          />
-        </div>
-        <div className='inputBlock'>
-          <label htmlFor='email' className='sr-only'>
-            Email address (Optional)
-          </label>
-          <input
-            id='email'
-            name='email'
-            type='email'
-            autoComplete='email'
-            aria-describedby='email-error'
-            placeholder='Email address (Optional)'
-            className='midForm'
-          />
-        </div>
-        <div className='inputBlock'>
-          <label htmlFor='password' className='sr-only'>
-            Password
-          </label>
-          <input
-            id='password'
-            name='password'
-            type='password'
-            autoComplete='new-password'
-            aria-describedby='password-error'
-            placeholder='Password'
-            required
-            className='midForm'
-          />
-        </div>
-        <div className='inputBlock'>
-          <label htmlFor='password-confirm' className='sr-only'>
-            Password Confirm
-          </label>
-          <input
-            id='password-confirm'
-            name='password-confirm'
-            type='password'
-            autoComplete='new-password'
-            aria-describedby='password-error'
-            placeholder='Confirm Password'
-            required
-            className='botForm'
-          />
-        </div>
+        <TextInput
+          labelText={'username'}
+          inputType={'text'}
+          placeholdText={'Username'}
+          inputCSSType={'topForm'}
+          required
+          autoComplete='username'
+        />
+        <TextInput
+          labelText={'email'}
+          inputType={'email'}
+          placeholdText={'Email (Optional)'}
+          inputCSSType={'midForm'}
+        />
+        <TextInput
+          labelText={'password'}
+          inputType={'password'}
+          placeholdText={'Password'}
+          inputCSSType={'midForm'}
+          required
+          autoComplete='new-password'
+        />
+        <TextInput
+          labelText={'password-confirm'}
+          inputType={'password'}
+          placeholdText={'Confirm Password'}
+          inputCSSType={'botForm'}
+          required
+          autoComplete='new-password'
+        />
       </div>
 
       <div className=''>

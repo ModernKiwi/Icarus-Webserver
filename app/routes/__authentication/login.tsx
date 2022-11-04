@@ -8,6 +8,12 @@ import { createUserSession } from '~/sessions/userSession.server';
 
 import { safeRedirect } from '~/utils';
 
+import { TextInput, cssLinks } from '~/components/inputs/TextInput';
+
+export const links: LinksFunction = () => {
+  return [...cssLinks()];
+};
+
 export const meta: MetaFunction = () => {
   return {
     title: 'Login',
@@ -66,36 +72,22 @@ export default function LoginPage() {
         <h2>Sign in</h2>
       </div>
       <div className='' id='formInputBlock'>
-        <div className='inputBlock'>
-          <label htmlFor='username' className='sr-only'>
-            Username
-          </label>
-          <input
-            id='username'
-            required
-            autoFocus={true}
-            name='username'
-            type='text'
-            aria-describedby='username-error'
-            placeholder='Uername'
-            className='topForm'
-          />
-        </div>
-        <div className='inputBlock'>
-          <label htmlFor='email' className='sr-only'>
-            Password
-          </label>
-          <input
-            id='password'
-            name='password'
-            type='password'
-            autoComplete='current-password'
-            aria-describedby='password-error'
-            placeholder='Password'
-            required
-            className='botForm'
-          />
-        </div>
+        <TextInput
+          labelText={'username'}
+          inputType={'text'}
+          placeholdText={'Username'}
+          inputCSSType={'topForm'}
+          required
+          autoComplete='username'
+        />
+        <TextInput
+          labelText={'password'}
+          inputType={'password'}
+          placeholdText={'Password'}
+          inputCSSType={'botForm'}
+          required
+          autoComplete='current-password'
+        />
       </div>
 
       <input type='hidden' name='redirectTo' value={redirectTo} />
