@@ -1,0 +1,49 @@
+.inputBlock {
+  padding-inline: 1px;
+}
+
+.inputStyle {
+  appearance: none;
+  width: 100%;
+
+  border-color: var(--colour-border);
+  border-width: 1px;
+  border-style: solid;
+
+  outline: 1px solid transparent;
+
+  color: var(--colour-font-dark);
+}
+.inputStyle:focus {
+  border-color: var(--colour-border__highlighted);
+  z-index: 10;
+}
+
+.topForm {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.midForm {
+  border-radius: 0;
+}
+
+.botForm {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.roundedForm {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.boxForm {
+  border-radius: 0;
+}
