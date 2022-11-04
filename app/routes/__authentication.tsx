@@ -9,8 +9,10 @@ export const links: LinksFunction = () => {
 
 export default function __authentication() {
   return (
-    <div className='' id='siteBodyContainer authBody'>
-      <Outlet />
+    <div className='' id='siteBodyContainer'>
+      <div id='authBody'>
+        <Outlet />
+      </div>
     </div>
   );
 }

@@ -7,70 +7,19 @@
 }
 
 #authForm {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  flex-wrap: nowrap;
+
   margin: 0 auto 0 auto;
   padding: 25px 15px 25px 15px;
 }
 
 #formInputBlock {
   padding: 0.5em 0.25em;
-}
-
-.inputBlock {
-  padding-inline: 1px;
-}
-
-.topForm {
-  appearance: none;
-
-  border-color: var(--colour-border);
-  border-width: 1px;
-  border-style: solid;
-
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-
-  outline: 1px solid transparent;
-
-  color: var(--colour-font-dark);
-}
-.topForm:focus {
-  border-color: var(--colour-border__highlighted);
-  z-index: 10;
-}
-
-.midForm {
-  appearance: none;
-
-  border-color: var(--colour-border);
-  border-width: 1px;
-  border-style: solid;
-
-  border-radius: 0;
-
-  outline: 1px solid transparent;
-
-  color: var(--colour-font-dark);
-}
-.midForm:focus {
-  border-color: var(--colour-border__highlighted);
-}
-
-.botForm {
-  border-color: var(--colour-border);
-  border-width: 1px;
-  border-style: solid;
-
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-
-  outline: 1px solid transparent;
-
-  color: var(--colour-font-dark);
-}
-.botForm:focus {
-  border-color: var(--colour-border__highlighted);
 }
