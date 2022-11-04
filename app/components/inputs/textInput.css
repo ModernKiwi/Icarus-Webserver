@@ -6,6 +6,8 @@
   appearance: none;
   width: 100%;
 
+  padding: 8px 15px;
+
   border-color: var(--colour-border);
   border-width: 1px;
   border-style: solid;
