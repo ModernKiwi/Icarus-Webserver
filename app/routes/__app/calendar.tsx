@@ -2,11 +2,11 @@
 import type { LinksFunction } from '@remix-run/node';
 import styles from '~/styles/Index.css';
 
-import { Calendar, links as calendarLinks } from '~/components/calendar/Calendar';
+import { Calendar, cssLinks } from '~/components/calendar/Calendar';
 import { Fragment } from 'react';
 
 export const links: LinksFunction = () => {
-  return [...calendarLinks(), { rel: 'stylesheet', href: styles }];
+  return [...cssLinks(), { rel: 'stylesheet', href: styles }];
 };
 
 export default function Index() {

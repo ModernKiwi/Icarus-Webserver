@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import styles from './Calendar.css';
 
-export const links = () => [{ rel: 'stylesheet', href: styles }];
+export const cssLinks = () => [{ rel: 'stylesheet', href: styles }];
 
 type calendarProps = {
   targetDate?: Date;
