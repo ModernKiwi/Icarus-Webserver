@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const username = formData.get('username')?.toString();
   const password = formData.get('password')?.toString();
-  const remember = formData.get('remember-me')?.toString();
+  const remember = formData.get('remember')?.toString();
   const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
 
   // Verify required data
@@ -64,7 +64,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/';
+  const redirectTo = searchParams.get('redirectTo') || '/dashboard';
 
   return (
     <Form method='post' className='' id='authForm'>
@@ -95,9 +95,9 @@ export default function LoginPage() {
         Log in
       </button>
 
-      <div className=''>
+      <div className='tempSpacer'>
         <input id='remember' name='remember' type='checkbox' className='' />
-        <label htmlFor='remember-me' className=''>
+        <label htmlFor='remember' className=''>
           Remember me
         </label>
       </div>

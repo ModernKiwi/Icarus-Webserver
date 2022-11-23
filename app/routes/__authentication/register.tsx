@@ -30,7 +30,7 @@ export const action: ActionFunction = async ({ request }: { request: Request }) 
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
   const passwordCopy = formData.get('password-confirm')?.toString();
-  const remember = formData.get('remember-me')?.toString();
+  const remember = formData.get('remember')?.toString();
   const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
 
   // Verify required data
@@ -62,7 +62,7 @@ export const action: ActionFunction = async ({ request }: { request: Request }) 
 
 export default function RegisterPage() {
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/';
+  const redirectTo = searchParams.get('redirectTo') || '/dashboard';
 
   return (
     <Form method='post' className='' id='authForm'>
@@ -102,13 +102,11 @@ export default function RegisterPage() {
         />
       </div>
 
-      <div className=''>
-        <div className='flex items-center'>
-          <input id='remember-me' name='remember-me' type='checkbox' className='' />
-          <label htmlFor='remember-me' className=''>
-            Remember me
-          </label>
-        </div>
+      <div className='tempSpacer'>
+        <input id='remember' name='remember' type='checkbox' className='' />
+        <label htmlFor='remember' className=''>
+          Remember me
+        </label>
       </div>
 
       <div>
