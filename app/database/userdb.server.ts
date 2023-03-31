@@ -1,101 +1,104 @@
-//  TODO: Add error handling middleware
-//  TODO: Add middleware to remove password when getting user account.
-
-import type { HydratedDocument } from 'mongoose';
+import { prop, getModelForClass } from '@typegoose/typegoose';
 import bcrypt from 'bcryptjs';
 
-import { mongoose } from '~/database/db.server';
-const { Document, Model, model, Types, Schema, Query } = mongoose;
+// Account class for storing user account information
+class Account {
+  @prop({ required: true, default: false })
+  public admin!: boolean;
 
-interface IUser {
-  username: string;
-  hashedPW: string;
-  email?: string;
-  account?: {
-    admin: boolean;
-    registeredAt?: Date;
-  };
-  // connections?: {
-  //   discord?: string;
-  //   twitch?: string;
-  //   youtube?: string;
-  // };
+  @prop({ default: Date.now })
+  public registeredAt?: Date;
 }
 
-const userSchema = new Schema<IUser>({
-  username: { type: String, required: true, unique: true, lowercase: true },
-  email: { type: String, index: true, lowercase: true },
-  hashedPW: { type: String, required: true },
-  account: {
-    admin: { type: Boolean, required: true, default: false },
-    registeredAt: { type: Date, default: Date.now },
-  },
-});
+// User class for storing user information
+export class User {
+  @prop({ required: true, unique: true, lowercase: true })
+  public username!: string;
 
-export const User = mongoose.models.User || model<IUser>('User', userSchema);
+  @prop({ required: true })
+  public hashedPW?: string;
 
-//  Util function
-export async function checkUsernameExists(username: string) {
-  const user = await User.findOne({ username: username });
+  @prop({ index: true, lowercase: true })
+  public email?: string;
 
-  if (user) return true;
-  return false;
+  @prop()
+  public account?: Account;
 }
 
-export async function checkEmailExists(email: string) {
-  const user = await User.findOne({ email: email });
+// Create a Mongoose model for User
+const UserModel = getModelForClass(User);
 
-  if (user) return true;
-  return false;
-}
-
-export async function verifyUserPassword(username: string, password: string) {
-  const result = await User.findOne({ username: username });
-  if (result) {
-    return await bcrypt.compare(password, result.hashedPW);
+// UserService class for handling user-related operations
+class UserService {
+  // Check if a username exists in the database
+  // @param {string} username - The username to check for existence
+  static async checkUsernameExists(username: string) {
+    return Boolean(await UserModel.findOne({ username }).select('_id'));
   }
-  return false;
-}
 
-//  Create
-export async function createUser(username: string, password: string, email?: string) {
-  const user: HydratedDocument<IUser> = new User<IUser>({
-    username: username,
-    email: email,
-    hashedPW: await bcrypt.hash(password, 10),
-  });
-  // TODO: Add error handling and return error.
-  return await user.save();
-}
+  // Check if an email exists in the database
+  // @param {string} email - The email to check for existence
+  static async checkEmailExists(email: string) {
+    return Boolean(await UserModel.findOne({ email }).select('_id'));
+  }
 
-export async function createAdminUser(username: string, password: string, email?: string) {
-  const user: HydratedDocument<IUser> = new User<IUser>({
-    username: username,
-    email: email,
-    hashedPW: await bcrypt.hash(password, 10),
-    account: {
-      admin: true,
-    },
-  });
-  // TODO: Add error handling and return error.
-  return await user.save();
-}
+  // Verify if the provided password matches the stored hashed password
+  // @param {string} username - The username to verify the password for
+  // @param {string} password - The password to verify
+  static async verifyUserPassword(username: string, password: string) {
+    const user = await UserModel.findOne({ username }).select('hashedPW');
+    return user ? await bcrypt.compare(password, user.hashedPW!) : false;
+  }
 
-//  Read
-export async function getUser(username: string) {
-  return await User.findOne({ username: username });
-}
+  // Create a new user with the given username, password, and optional email
+  // @param {string} username - The username for the new user
+  // @param {string} password - The password for the new user
+  // @param {string} [email] - The optional email for the new user
+  static async createUser(username: string, password: string, email?: string) {
+    const hashedPW = await bcrypt.hash(password, 10);
+    const user = new UserModel({ username, email, hashedPW });
 
-export async function getUserSecure(username: string, password: string) {
-  const user = await User.findOne<IUser>({ username: username });
-  if (user) {
-    const passwordVerified = await bcrypt.compare(password, user.hashedPW);
-    if (passwordVerified) return user;
+    return await user.save();
+  }
+
+  // Create a new admin user with the given username, password, and optional email
+  // @param {string} username - The username for the new admin user
+  // @param {string} password - The password for the new admin user
+  // @param {string} [email] - The optional email for the new admin user
+  static async createAdminUser(username: string, password: string, email?: string) {
+    const hashedPW = await bcrypt.hash(password, 10);
+    const user = new UserModel({ username, email, hashedPW, account: { admin: true } });
+
+    return await user.save();
+  }
+
+  // Get a user by their username without returning account or password information
+  // @param {string} username - The username of the user to fetch
+  static async getUser(username: string) {
+    return await UserModel.findOne({ username }).select('-account -hashedPW');
+  }
+
+  // Get a user securely by their username and password, without returning the password
+  // @param {string} username - The username of the user to fetch
+  // @param {string} password - The password of the user to fetch
+  static async getUserSecure(username: string, password: string) {
+    const user = await UserModel.findOne({ username });
+    if (user) {
+      const passwordVerified = await bcrypt.compare(password, user.hashedPW!);
+      if (passwordVerified) {
+        const { hashedPW, ...userWithoutPassword } = user.toObject();
+        return userWithoutPassword;
+      }
+    }
     return null;
   }
-  return null;
-}
-//  Update
 
-//  Delete
-export function deleteUserByID() {}
+  // Delete a user by their ID
+  // @param {string} userId - The ID of the user to delete
+  static async deleteUserById(userId: string) {
+    const result = await UserModel.deleteOne({ _id: userId });
+    return result.deletedCount > 0;
+  }
+}
+
+export default UserService;

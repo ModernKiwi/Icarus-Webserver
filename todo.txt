@@ -1,12 +1,11 @@
 Todo task ordered list:
 
-1:  Update Login Page, Add Auth code.
-2:  Update Logout Page, Add session code.
-3:  Create Auth page layout.
-4:  Create base nav layout.
-5:  Create Navlinks.
-
-
-Navbar component
+1: Update base framework.
+2: Impliment tools
+2: Design Layout of website.
+3: Build Nav Bar.
+4: Create _session cookie
+5: Create user authentication.
+6: Create dashboard modules and sidebar.
 
 DONT accidently Drop a stash instead of popping a stash big sad. very big sad.
